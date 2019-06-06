@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+message InfoRequest {
+}
+
+message InfoResponse {
+  string version = 1;
+  repeated string methods = 2;
+}
+
+service Internal {
+  rpc Info(InfoRequest) returns (InfoResponse);
+}

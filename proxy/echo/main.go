@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	echo "github.com/bakaoh/x/proxy/idl"
+	echo "github.com/bakaoh/x/proxy/pb"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -18,6 +18,11 @@ type server struct{}
 // Echo ...
 func (s *server) Echo(ctx context.Context, in *echo.EchoRequest) (*echo.EchoResponse, error) {
 	return &echo.EchoResponse{Message: "Hello " + in.Message}, nil
+}
+
+// Info ...
+func (s *server) Info(context.Context, *echo.InfoRequest) (*echo.InfoResponse, error) {
+	return &echo.InfoResponse{Version: "abc"}, nil
 }
 
 func main() {
@@ -41,6 +46,7 @@ func main() {
 
 	s := grpc.NewServer()
 	echo.RegisterEchoServiceServer(s, &server{})
+	echo.RegisterInternalServer(s, &server{})
 
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
